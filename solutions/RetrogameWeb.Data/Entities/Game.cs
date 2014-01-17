@@ -1,14 +1,14 @@
-﻿#region Using
-
-using System;
-using MongoDB.Bson.Serialization.Attributes;
-using System.Collections.Generic;
-
-#endregion
-
-
-namespace RetrogameWeb.Data.Entities
+﻿namespace RetrogameWeb.Data.Entities
 {
+
+    #region Using
+
+    using System;
+    using MongoDB.Bson.Serialization.Attributes;
+    using System.Collections.Generic;
+
+    #endregion
+
     [BsonIgnoreExtraElements]
     public class Game : MongoEntity
     {

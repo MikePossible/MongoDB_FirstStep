@@ -12,7 +12,7 @@
     #endregion
 
     [BsonIgnoreExtraElements]
-    public class Player
+    public class Player: MongoEntity
     {
         //Constructor
         public Player()
