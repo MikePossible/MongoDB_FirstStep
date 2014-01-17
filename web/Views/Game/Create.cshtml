@@ -1,0 +1,55 @@
+﻿@model RetrogameWeb.Data.Entities.Game
+
+@{ ViewBag.Title = "Create a new game"; }
+
+<h2>Create a new game</h2>
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+    
+    <fieldset>
+        <legend>Game</legend>
+
+        @*<div class="editor-label">@Html.Label(Model.Name)</div>
+        <div class="editor-field">
+            @Html.Editor(Model.Name)
+            @Html.ValidationMessage(Model.Name)
+        </div>*@
+
+
+        <div class="editor-label">@Html.LabelFor(game => game.Name)</div>
+        <div class="editor-field">
+            @Html.EditorFor(game => game.Name)
+            @Html.ValidationMessageFor(game => game.Name)
+        </div>
+
+        <div class="editor-label">@Html.LabelFor(game => game.ReleaseDate)</div>
+        <div class="editor-field">
+            @Html.EditorFor(game => game.ReleaseDate)
+            @Html.ValidationMessageFor(game => game.ReleaseDate)
+        </div>
+
+        @{
+            var categories = new List<SelectListItem> {
+                                new SelectListItem { Text = "remake", Value = "remake" },
+                                new SelectListItem { Text = "space", Value = "space" },
+                                new SelectListItem { Text = "shooter", Value = "shooter" }  
+            };            
+        }
+
+        <div class="editor-label">@Html.LabelFor(game => game.Categories)</div>
+        <div class="editor-field">
+            @Html.ListBoxFor(game => game.Categories, categories)
+            @Html.ValidationMessageFor(game => game.ReleaseDate)
+        </div>
+
+        <input type="submit" value="Create" />
+    </fieldset>
+}
+
+<div>@Html.ActionLink("Back to list", "Index")</div>
+
+@*@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+}*@
