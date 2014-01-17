@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace FirstStep
+namespace RetrogameWeb
 {
     public class RouteConfig
     {
@@ -13,10 +13,18 @@ namespace FirstStep
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            //Game Route
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "Game", action = "Index", id = UrlParameter.Optional }
+            );
+
+            //Player Route
+            routes.MapRoute(
+                name: "Player",
+                url: "{controller}/{action}/{id}",
+                defaults: new { controller = "Player", action = "Index", id = UrlParameter.Optional }
             );
         }
     }

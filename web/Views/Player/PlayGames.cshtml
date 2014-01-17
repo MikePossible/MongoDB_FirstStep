@@ -1,0 +1,22 @@
+﻿@model RetrogameWeb.Models.PlayerGames
+
+@{
+    ViewBag.Title = "PlayGames";
+}
+
+<h2>PlayGames</h2>
+
+<fieldset>
+    <legend>Play</legend>    
+    <div class="display-label">@Html.DisplayNameFor(play => play.Player.Name)</div>
+    <div class="display-field">@Html.DisplayNameFor(play => play.Player.Name)</div>
+</fieldset>
+
+<h3>Click on the desired game and register your score</h3>
+
+@foreach (var game in Model.AvailableGames)
+{
+    <p>@Html.ActionLink(game.Name, "AddScore", new { playerID = Model.Player.ID.ToString(), gameID = game.ID.ToString(), gameName = game.Name })</p>    
+}
+
+<p>@Html.ActionLink("Back to list", "Index")</p>

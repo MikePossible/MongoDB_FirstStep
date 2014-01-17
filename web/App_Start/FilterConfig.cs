@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using System.Web.Mvc;
 
-namespace FirstStep
+namespace RetrogameWeb
 {
     public class FilterConfig
     {

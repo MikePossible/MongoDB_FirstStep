@@ -1,0 +1,43 @@
+﻿@model RetrogameWeb.Data.Entities.Player
+
+@{ ViewBag.Title = "Details"; }
+
+<h2>Player's Details</h2>
+
+<fieldset>
+    <legend>Player</legend>
+
+    <span class="display-label">@Html.DisplayNameFor(play => play.Name): </span>
+    <span class="display-field">@Html.DisplayFor(play => play.Name)</span><br />
+    
+    <span class="display-label">@Html.DisplayNameFor(play => play.Gender): </span>
+    <span class="display-field">@Html.DisplayFor(play => play.Gender)</span>
+
+</fieldset>
+
+@if (Model.Scores.Count > 0) {
+<table>
+    <tr>
+        <th>Game</th>
+        <th>Date & Time</th>
+        <th>Score</th>
+    </tr>
+
+    @foreach (var score in Model.Scores)
+    {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => score.GameName)</td>
+            <td>@Html.DisplayFor(modelItem => score.ScoreDateTime)</td>
+            <td>@Html.DisplayFor(modelItem => score.ScoreValue)</td>
+        </tr>
+    }
+</table>
+} else {
+    <label>No record found.</label>   
+}
+
+<p>@Html.ActionLink("Play Games!", "PlayGames", new { id = Model.ID })</p>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID })
+    @Html.ActionLink("Back to list", "Index")
+</p>

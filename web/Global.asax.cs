@@ -1,6 +1,6 @@
 ﻿#region Using
 
-using FirstStep.CustomModelBinders;
+using RetrogameWeb.CustomModelBinders;
 using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ using System.Web.Routing;
 
 #endregion
 
-namespace FirstStep
+namespace RetrogameWeb
 {
     // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
     // visit http://go.microsoft.com/?LinkId=9394801
