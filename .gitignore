@@ -2,3 +2,5 @@
 *.pdb
 web/bin/
 web/obj/
+*/RetrogameWeb.Data/obj/
+*/RetrogameWeb.Data/bin/

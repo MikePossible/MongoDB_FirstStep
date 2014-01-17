@@ -1,7 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FirstStep", "..\web\FirstStep.csproj", "{BD77DA8D-0EDF-46F0-BB5B-6CD26F83E875}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetrogrameWeb", "..\web\RetrogrameWeb.csproj", "{BD77DA8D-0EDF-46F0-BB5B-6CD26F83E875}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetrogameWeb.Data", "RetrogameWeb.Data\RetrogameWeb.Data.csproj", "{B06DFEA5-B5B5-4E6D-8081-CFE6D1154A01}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +15,10 @@ Global
 		{BD77DA8D-0EDF-46F0-BB5B-6CD26F83E875}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD77DA8D-0EDF-46F0-BB5B-6CD26F83E875}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BD77DA8D-0EDF-46F0-BB5B-6CD26F83E875}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B06DFEA5-B5B5-4E6D-8081-CFE6D1154A01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B06DFEA5-B5B5-4E6D-8081-CFE6D1154A01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B06DFEA5-B5B5-4E6D-8081-CFE6D1154A01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B06DFEA5-B5B5-4E6D-8081-CFE6D1154A01}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
