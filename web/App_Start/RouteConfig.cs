@@ -13,11 +13,11 @@ namespace RetrogameWeb
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-            //Game Route
+            //Instagram Route
             routes.MapRoute(
-                name: "Default",
+                name: "Instagram",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Game", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "Instagram", action = "Index", id = UrlParameter.Optional }
             );
 
             //Player Route
@@ -25,6 +25,13 @@ namespace RetrogameWeb
                 name: "Player",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Player", action = "Index", id = UrlParameter.Optional }
+            );
+
+            //Game Route
+            routes.MapRoute(
+                name: "default",
+                url: "{controller}/{action}/{id}",
+                defaults: new { controller = "Game", action = "Index", id = UrlParameter.Optional }
             );
         }
     }
