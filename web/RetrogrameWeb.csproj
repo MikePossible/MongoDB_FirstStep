@@ -130,6 +130,7 @@
     <Compile Include="Models\Instagram.cs" />
     <Compile Include="Models\InstagramImage.cs" />
     <Compile Include="Models\PlayerGames.cs" />
+    <Compile Include="Models\ViewModel\CallBackVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

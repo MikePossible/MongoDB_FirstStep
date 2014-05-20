@@ -1,4 +1,7 @@
-﻿namespace FirstStep.Controllers
+﻿using System.Web.Helpers;
+using FirstStep.Models.ViewModel;
+
+namespace FirstStep.Controllers
 {
     #region Using
 
@@ -34,39 +37,50 @@
         /// <param name="code"></param>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult Callback(string code)
+        public ActionResult Callback(string code, string City)
         {
-            ViewBag.Code = code;
-            var lst = new List<InstagramImage>();
+            var vm = new CallBackVM();
+            vm.InstagramCode = code;
+            vm.Cities = new SelectList(this.GetListCity(), "Name", "Name");
 
             try
             {
                 // Authorize
                 // If the sessiond doesn't contain the Instagram object then connect to the API
                 if (this.insta.SessionOAuth == null)
-                    this.insta.Authorize(code);
+                    insta.Authorize(code);
 
-                ViewBag.Token = this.insta.SessionOAuth.Access_Token;
-                ViewBag.Username = this.insta.SessionOAuth.User.Username;
-
+                vm.AuthorizationToken = this.insta.SessionOAuth.Access_Token;
+                vm.UserName = this.insta.SessionOAuth.User.Username;
 
                 // Create subscription
                 // insta.CreateSubscription();
-
+                
                 // Get most popular images for Paris
-                City paris = this._svc.GetByName("Sao Paulo");
-                lst = this.insta.GetMostPopularImages(ViewBag.Token, paris);
+                //City paris = this._svc.GetByName("Sao Paulo");
+                //vm.Images = this.insta.GetMostPopularImages(ViewBag.Token, paris);
+                
             }
             catch (Exception ex)
             {
                 var error = ex.ToString();                
             }
 
-            ViewBag.List = lst;
-
-            return View();
+            return View(vm);
         }
 
+        /// <summary>
+        /// Return list of images for JS
+        /// </summary>
+        /// <param name="cityName"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult GetListImages(string cityName)
+        {
+            // Get most popular images for a city
+            City currentCity = this._svc.GetByName(cityName);
+            return Json(this.insta.GetMostPopularImages(ViewBag.Token, currentCity), JsonRequestBehavior.AllowGet);
+        }
 
         /// <summary>
         /// Index
@@ -77,7 +91,8 @@
             // Populate MongoDB City
             this.PopulateCity();
 
-            ViewBag.AuthLink = this.insta.Authenticate();            
+            ViewBag.AuthLink = this.insta.Authenticate();
+            ViewBag.Cities = new SelectList(GetListCity(), "Name", "Name");
 
             return View();
         }
@@ -103,5 +118,14 @@
                     this._svc.Create(c);
             }
         }
-    }// class
-}// namespace
+
+        /// <summary>
+        /// Gets all cities
+        /// </summary>
+        /// <returns>list of cities</returns>
+        private List<City> GetListCity()
+        {
+            return _svc.GetAllCities();
+        }
+    }
+}
