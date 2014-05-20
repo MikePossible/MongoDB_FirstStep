@@ -27,11 +27,26 @@
                 .Any(x => x.Name.ToLower() == entity.Name.ToLower());
         }
 
+        /// <summary>
+        /// Gets a city by name
+        /// </summary>
+        /// <param name="name">city name</param>
+        /// <returns>a city</returns>
         public City GetByName(string name)
         {
             return this.MongoConnectionHandler.MongoCollection.FindAllAs<City>()
                 .Where(x => x.Name.ToLower() == name.ToLower())
                 .SingleOrDefault();
+        }
+
+        /// <summary>
+        /// Gets all cities
+        /// </summary>
+        /// <returns>list of city</returns>
+        public List<City> GetAllCities()
+        {
+            return this.MongoConnectionHandler.MongoCollection.FindAllAs<City>()
+                .ToList();
         }
 
         /// <summary>
