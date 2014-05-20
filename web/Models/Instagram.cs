@@ -1,13 +1,10 @@
-﻿using RetrogameWeb.Data.Entities;
-
-namespace FirstStep.Models
+﻿namespace FirstStep.Models
 {
     #region Using
-
+    using System;
     using InstaSharp;
     using InstaSharp.Models.Responses;
     using Newtonsoft.Json;
-    using System;
     using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.Configuration;
@@ -15,20 +12,15 @@ namespace FirstStep.Models
     using System.Net;
     using System.Web;
 
+    using RetrogameWeb.Data.Entities;
+
     #endregion
 
-
+    /// <summary>
+    /// Class for instagram
+    /// </summary>
     public class Instagram
     {
-        #region Constructor
-        
-        public Instagram()
-        {
-            
-        }// Instagram(...)
-
-        #endregion
-
         #region Properties        
 
         private readonly string _clientID = ConfigurationManager.AppSettings["ClientID"] as string ?? "";
@@ -41,95 +33,94 @@ namespace FirstStep.Models
         private readonly string _accesstokenUri = "https://api.instagram.com/oauth/access_token";
         private readonly string _grantAccess = "authorization_code";
 
+        /// <summary>
+        /// Gets instagram config
+        /// </summary>
         public InstagramConfig Config
         {
             get
             {
-
-                var config = HttpContext.Current.Session["InstagramConfig"] as InstagramConfig;
-                if (config == null)
-                {
-                    config = new InstagramConfig(this._clientID,
+                return (HttpContext.Current.Session["InstagramConfig"] as InstagramConfig) ??
+                    new InstagramConfig(
+                        this._clientID,
                         this._clientSecret,
                         this._redirectUri,
                         this._callbackUri,
                         this._apiUrl,
                         this._oauthUri,
                         string.Empty);
-                    
-                } // if
-
-                return config;
             }
-        }// Config
+        }
 
-        //Instagram Info stored in the session
+        /// <summary>
+        /// Gets or sets info stored in the session
+        /// </summary>
         public OAuthResponse SessionOAuth
         {
-            get
-            {
-                return HttpContext.Current.Session["SessionOAuth"] as OAuthResponse ?? null;
-            }// get
-
-            set
-            {
-                HttpContext.Current.Session["SessionOAuth"] = value;
-            }// set
-        }// SessionOAuth
+            get { return HttpContext.Current.Session["SessionOAuth"] as OAuthResponse ?? null; }
+            set { HttpContext.Current.Session["SessionOAuth"] = value; }
+        }
 
         #endregion
 
         #region Methods       
         
-        //Authentication
+        /// <summary>
+        /// Authentication
+        /// </summary>
+        /// <returns></returns>
         public string Authenticate()
         {
-            //Create the auth url
+            // Create the auth url
             var scopes = new List<OAuth.Scope>();
             scopes.Add(OAuth.Scope.Likes);
             scopes.Add(OAuth.Scope.Comments);
 
-            return OAuth.AuthLink(this.Config.OAuthUri + "/authorize",
+            return OAuth.AuthLink(
+                this.Config.OAuthUri + "/authorize",
                 this.Config.ClientId,
                 this.Config.RedirectUri,
                 scopes,
                 OAuth.ResponseType.Code);
+        }
 
-        }// Authenticate(...)
-
-        //Sets Token and User info
+        /// <summary>
+        /// Sets Token and User info
+        /// </summary>
+        /// <param name="code"></param>
         public void Authorize(string code)
         {
             try
             {
-                //Populate the parameters to send
-                NameValueCollection parameters = new NameValueCollection();
+                // Populate the parameters to send
+                var parameters = new NameValueCollection();
                 parameters.Add("client_id", this.Config.ClientId);
                 parameters.Add("client_secret", this.Config.ClientSecret);
-                parameters.Add("grant_type", _grantAccess);
+                parameters.Add("grant_type", this._grantAccess);
                 parameters.Add("redirect_uri", this.Config.RedirectUri);
                 parameters.Add("code", code);
 
-                //WebRequest sent to Instagram
-                WebClient client = new WebClient();
-                var result = client.UploadValues(_accesstokenUri, parameters);
+                // WebRequest sent to Instagram
+                var client = new WebClient();
+                var result = client.UploadValues(this._accesstokenUri, parameters);
 
-                //Encoding the result returned
+                // Encoding the result returned
                 var response = System.Text.Encoding.Default.GetString(result);
 
-                //Set Session Object
+                // Set Session Object
                 this.SessionOAuth = JsonConvert.DeserializeObject<OAuthResponse>(response);
             }
             catch (Exception ex)
             {
-                //Log error
+                // Log error
             }
-
-        } // GetToken(...)
+        }
 
         #region Subscription
 
-        // Create a subscription
+        /// <summary>
+        /// Create a subscription
+        /// </summary>
         public void CreateSubscription()
         {
             try
@@ -158,7 +149,12 @@ namespace FirstStep.Models
             }// try..catch
         }// CreateSubscription(...)      
   
-        // Get list of most popular images
+        /// <summary>
+        /// Get list of most popular images
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="city"></param>
+        /// <returns></returns>
         public List<InstagramImage> GetMostPopularImages(string token, City city)
         {
             var lst = new List<InstagramImage>();

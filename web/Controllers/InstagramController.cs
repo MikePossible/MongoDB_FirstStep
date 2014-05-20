@@ -1,7 +1,4 @@
-﻿using RetrogameWeb.Data.Entities;
-using RetrogameWeb.Data.Services;
-
-namespace FirstStep.Controllers
+﻿namespace FirstStep.Controllers
 {
     #region Using
 
@@ -9,7 +6,7 @@ namespace FirstStep.Controllers
     using InstaSharp;
     using InstaSharp.Endpoints;
     using InstaSharp.Models;
-    using InstaSharp.Models.Responses;    
+    using InstaSharp.Models.Responses;
     using System;
     using System.Collections.Generic;        
     using System.Linq;
@@ -19,20 +16,23 @@ namespace FirstStep.Controllers
     using System.Web;
     using System.Web.Mvc;
 
+    using RetrogameWeb.Data.Entities;
+    using RetrogameWeb.Data.Services;
+
     #endregion
 
     public class InstagramController : Controller
     {
-        //Constructor
         //ToDo implement IoC
         private Instagram insta = new Instagram();
-        public InstagramController() { }// Instagram
-
-        CityService svc = new CityService();
+        private CityService _svc = new CityService();
 
 
-        // GET: /Instagram/Callback
-        //[Get("oauth")]   
+        /// <summary>
+        /// /Instagram/Callback
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult Callback(string code)
         {
@@ -41,29 +41,21 @@ namespace FirstStep.Controllers
 
             try
             {
-                //Authorize
-                //If the sessiond doesn't contain the Instagram object then connect to the API
-                if (insta.SessionOAuth == null)
-                    insta.Authorize(code);
+                // Authorize
+                // If the sessiond doesn't contain the Instagram object then connect to the API
+                if (this.insta.SessionOAuth == null)
+                    this.insta.Authorize(code);
 
-                ViewBag.Token = insta.SessionOAuth.Access_Token;
-                ViewBag.Username = insta.SessionOAuth.User.Username;
+                ViewBag.Token = this.insta.SessionOAuth.Access_Token;
+                ViewBag.Username = this.insta.SessionOAuth.User.Username;
 
 
-                //Create subscription
-                //insta.CreateSubscription();
+                // Create subscription
+                // insta.CreateSubscription();
 
                 // Get most popular images for Paris
-                City paris = this.svc.GetByName("Sao Paulo");
-                
+                City paris = this._svc.GetByName("Sao Paulo");
                 lst = this.insta.GetMostPopularImages(ViewBag.Token, paris);
-
-                //Doesn't work
-                //var auth = new OAuth(insta.Config);
-
-                ////Callback to instagram
-                //var oauthResp = auth.RequestToken(code);
-
             }
             catch (Exception ex)
             {
@@ -73,21 +65,22 @@ namespace FirstStep.Controllers
             ViewBag.List = lst;
 
             return View();
-
-            //return RedirectToAction("Index");
-        }// Index()
+        }
 
 
-        //Get: /Instagram/
+        /// <summary>
+        /// Index
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Index()
         {
             // Populate MongoDB City
             this.PopulateCity();
 
-            ViewData["AuthLink"] = insta.Authenticate();            
+            ViewBag.AuthLink = this.insta.Authenticate();            
 
             return View();
-        }// Index()
+        }
 
         /// <summary>
         /// Add cities into MongoDB
@@ -106,10 +99,8 @@ namespace FirstStep.Controllers
             // Insert into the DB
             foreach (City c in lst)
             {
-                if (!this.svc.Contains(c))
-                {
-                    svc.Create(c);
-                }
+                if (!this._svc.Contains(c))
+                    this._svc.Create(c);
             }
         }
     }// class
