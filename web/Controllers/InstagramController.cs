@@ -31,16 +31,24 @@
         public ActionResult Callback(string code)
         {
             ViewBag.Code = code;
+            var lst = new List<InstagramImage>();
 
             try
             {
+                //Authorize
                 //If the sessiond doesn't contain the Instagram object then connect to the API
                 if (insta.SessionOAuth == null)
                     insta.Authorize(code);
 
                 ViewBag.Token = insta.SessionOAuth.Access_Token;
                 ViewBag.Username = insta.SessionOAuth.User.Username;
-                
+
+
+                //Create subscription
+                //insta.CreateSubscription();
+
+                // Get most popular images
+                lst = insta.GetMostPopularImages(ViewBag.Token);
 
                 //Doesn't work
                 //var auth = new OAuth(insta.Config);
@@ -53,6 +61,8 @@
             {
                 var error = ex.ToString();                
             }
+
+            ViewBag.List = lst;
 
             return View();
 

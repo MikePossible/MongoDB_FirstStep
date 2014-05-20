@@ -1,4 +1,5 @@
-﻿@{
+﻿@using FirstStep.Models
+@{
     ViewBag.Title = "Redirect";
 }
 
@@ -8,3 +9,12 @@
 <h2>User info:</h2>
 <div>Token: @ViewBag.Token</div>
 <div>Username: @ViewBag.Username</div>
+
+<div>
+    @foreach (InstagramImage img in ViewBag.List) 
+    {
+        <div style="float:left">
+            <img src="@img.Url" alt="@img.Caption" title="@img.Caption" />
+        </div>
+    }
+</div>

@@ -53,9 +53,9 @@
                         this._callbackUri,
                         this._apiUrl,
                         this._oauthUri,
-                        "");
+                        string.Empty);
                     
-                }// if
+                } // if
 
                 return config;
             }
@@ -87,7 +87,6 @@
             scopes.Add(OAuth.Scope.Likes);
             scopes.Add(OAuth.Scope.Comments);
 
-            //var link = OAuth.AuthLink(this.Config.OAuthUri + "/authorize",
             return OAuth.AuthLink(this.Config.OAuthUri + "/authorize",
                 this.Config.ClientId,
                 this.Config.RedirectUri,
@@ -122,13 +121,89 @@
             catch (Exception ex)
             {
                 //Log error
-            }// try..catch
+            }
 
-        }// GetToken(...)
+        } // GetToken(...)
+
+        #region Subscription
+
+        // Create a subscription
+        public void CreateSubscription()
+        {
+            try
+            {
+                //Populate the parameters to send
+                NameValueCollection parameters = new NameValueCollection();
+                parameters.Add("client_id", this.Config.ClientId);
+                parameters.Add("client_secret", this.Config.ClientSecret);
+                parameters.Add("verify_token", this.SessionOAuth.Access_Token);
+                parameters.Add("object", "user");
+                parameters.Add("aspect", "media");
+                parameters.Add("callback_url", this.Config.CallbackUri);
+
+                //WebRequest sent to Instagram
+                WebClient client = new WebClient();
+                var result = client.UploadValues("https://api.instagram.com/v1/subscriptions/", 
+                    parameters);
+
+                //Encoding the result returned
+                var response = System.Text.Encoding.Default.GetString(result);
+                
+            }
+            catch (Exception ex)
+            {
+
+            }// try..catch
+        }// CreateSubscription(...)      
+  
+        // Get list of most popular images
+        public List<InstagramImage> GetMostPopularImages(string token)
+        {
+            var lst = new List<InstagramImage>();
+
+            try
+            {
+                // Populate the parameters to send
+                var parameters = new NameValueCollection();
+                parameters.Add("client_id", this.Config.ClientId);
+
+                // Get insta images and deserialize object
+                var client = new WebClient();
+
+                // Search images in Paris
+                var result = client.DownloadString(
+                    String.Format(
+                    "https://api.instagram.com/v1/media/search?lat={0}&lng={1}&client_id={2}&distance=5000",
+                    48.8588589,             // latitude
+                    2.3470599,              // longitude
+                    this.Config.ClientId));
+
+                dynamic dyn = JsonConvert.DeserializeObject(result);
+
+                // Populate list with instagram images
+                foreach (var data in dyn.data)
+                {
+                    if (data != null && data.images != null)
+                    {
+                        lst.Add(new InstagramImage(
+                            data.images.thumbnail.url.ToString(),
+                            data.user.username.ToString(),
+                            data.caption != null ? data.caption.text.ToString() : string.Empty,
+                            string.Empty));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                var error = ex.ToString();
+            }
+
+            return lst;
+        }
+
 
         #endregion
 
-    }// class
-
-
-}// namespace
+        #endregion
+    } // class
+} // namespace
