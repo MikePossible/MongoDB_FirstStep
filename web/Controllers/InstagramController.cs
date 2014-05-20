@@ -1,4 +1,7 @@
-﻿namespace FirstStep.Controllers
+﻿using RetrogameWeb.Data.Entities;
+using RetrogameWeb.Data.Services;
+
+namespace FirstStep.Controllers
 {
     #region Using
 
@@ -24,7 +27,10 @@
         //ToDo implement IoC
         private Instagram insta = new Instagram();
         public InstagramController() { }// Instagram
-        
+
+        CityService svc = new CityService();
+
+
         // GET: /Instagram/Callback
         //[Get("oauth")]   
         [HttpGet]
@@ -47,8 +53,10 @@
                 //Create subscription
                 //insta.CreateSubscription();
 
-                // Get most popular images
-                lst = insta.GetMostPopularImages(ViewBag.Token);
+                // Get most popular images for Paris
+                City paris = this.svc.GetByName("Sao Paulo");
+                
+                lst = this.insta.GetMostPopularImages(ViewBag.Token, paris);
 
                 //Doesn't work
                 //var auth = new OAuth(insta.Config);
@@ -73,11 +81,36 @@
         //Get: /Instagram/
         public ActionResult Index()
         {
+            // Populate MongoDB City
+            this.PopulateCity();
+
             ViewData["AuthLink"] = insta.Authenticate();            
 
             return View();
         }// Index()
-        
 
+        /// <summary>
+        /// Add cities into MongoDB
+        /// Would be better to populate it by using following api http://api.geonames.org/search?q=london&maxRows=10&username=demo
+        /// </summary>
+        private void PopulateCity()
+        {
+            var lst = new List<City>()
+            {
+                new City() { Name = "Paris", Latitude = "48.85341", Longitude = "2.3488" },
+                new City() { Name = "Zagreb", Latitude = "45.81444", Longitude = "15.97798" },
+                new City() { Name = "Sao Paulo", Latitude = "-23.5475", Longitude = "-46.63611" },
+                new City() { Name = "London", Latitude = "51.50853", Longitude = "-0.12574" }
+            };
+
+            // Insert into the DB
+            foreach (City c in lst)
+            {
+                if (!this.svc.Contains(c))
+                {
+                    svc.Create(c);
+                }
+            }
+        }
     }// class
 }// namespace

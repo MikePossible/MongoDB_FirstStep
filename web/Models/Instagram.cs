@@ -1,4 +1,6 @@
-﻿namespace FirstStep.Models
+﻿using RetrogameWeb.Data.Entities;
+
+namespace FirstStep.Models
 {
     #region Using
 
@@ -157,7 +159,7 @@
         }// CreateSubscription(...)      
   
         // Get list of most popular images
-        public List<InstagramImage> GetMostPopularImages(string token)
+        public List<InstagramImage> GetMostPopularImages(string token, City city)
         {
             var lst = new List<InstagramImage>();
 
@@ -174,8 +176,8 @@
                 var result = client.DownloadString(
                     String.Format(
                     "https://api.instagram.com/v1/media/search?lat={0}&lng={1}&client_id={2}&distance=5000",
-                    48.8588589,             // latitude
-                    2.3470599,              // longitude
+                    city.Latitude,
+                    city.Longitude,
                     this.Config.ClientId));
 
                 dynamic dyn = JsonConvert.DeserializeObject(result);
